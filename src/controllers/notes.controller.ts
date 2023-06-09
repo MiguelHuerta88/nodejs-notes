@@ -8,15 +8,22 @@ import {
   HttpStatus,
   Param,
   Patch,
+  Post,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { Notes } from '../models/entities/notes.entity';
 import { NoteGetDto } from './dtos/note.get.dto';
 import { NotePatchDto } from './dtos/note.patch.dto';
+import { NotePostDto } from './dtos/note.post.dto';
 
 @Controller('notes')
 export class NotesController {
   constructor(private readonly noteService: NotesService) {}
+
+  @Post()
+  public async createNote(@Body() note: NotePostDto): Promise<Notes> {
+    return await this.noteService.save(note);
+  }
 
   @Get()
   public async findAll(): Promise<Notes[]> {

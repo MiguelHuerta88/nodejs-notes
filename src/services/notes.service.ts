@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EnvConfigService } from './config/env-config.service';
 import { NotePatchDto } from '../controllers/dtos/note.patch.dto';
 import { uptime } from 'os';
+import { NotePostDto } from '../controllers/dtos/note.post.dto';
 
 @Injectable()
 export class NotesService {
@@ -22,6 +23,15 @@ export class NotesService {
       title: 'Miguel First Note',
       notes: 'this is some sample text to tie to this note',
     });
+  }
+
+  /**
+   * Create Note and return entity back
+   * @param note
+   * @return Promise<Notes>
+   */
+  public async save(note: NotePostDto): Promise<Notes> {
+    return await this.notesRespository.save(note);
   }
 
   /**
