@@ -3,6 +3,8 @@ import { Notes } from '../models/entities/notes.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EnvConfigService } from './config/env-config.service';
+import { NotePatchDto } from '../controllers/dtos/note.patch.dto';
+import { uptime } from 'os';
 
 @Injectable()
 export class NotesService {
@@ -29,5 +31,20 @@ export class NotesService {
    */
   public async findNoteById(id: number): Promise<Notes | null> {
     return await this.notesRespository.findOneBy({ id: id });
+  }
+
+  /**
+   * Path a note
+   * @param id
+   * @param updates
+   */
+  public async updateNote(id: number, updates: NotePatchDto): Promise<boolean> {
+    const updated = await this.notesRespository.update({ id: id }, updates);
+
+    return updated.affected > 0;
+  }
+
+  public async deleteNote(id: number): Promise<void> {
+    await this.notesRespository.delete(id);
   }
 }
