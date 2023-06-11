@@ -10,9 +10,11 @@ import { Users } from '../models/entities/users.entity';
 import { UserPostDto } from './dtos/user.post.dto';
 import { UsersService } from '../services/users.service';
 import { BcryptService } from '../services/bcrypt/bcrypt.service';
+import { UserLoginDto } from './dtos/user.login.dto';
+import { JwtModel } from '../models/utils/jwt';
 
-@Controller('users')
-export class UsersController {
+@Controller('auth')
+export class AuthController {
   constructor(
     private readonly userService: UsersService,
     private readonly bcryptService: BcryptService,
@@ -41,5 +43,26 @@ export class UsersController {
       );
 
     return user;
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  public async login(@Body() loginDto: UserLoginDto): Promise<void> {
+    // pull user
+    const user = await this.userService.findUserByEmail(loginDto.email);
+
+    if (!user)
+      throw new HttpException('User Error', HttpStatus.INTERNAL_SERVER_ERROR);
+
+    // compare password
+    if (!(await this.bcryptService.compare(loginDto.password, user.password)))
+      throw new HttpException(
+        'Invalid Password',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+
+    // generate tokens
+    // setup model
+    // return
   }
 }
