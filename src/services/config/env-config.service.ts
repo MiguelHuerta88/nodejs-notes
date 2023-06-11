@@ -38,4 +38,20 @@ export class EnvConfigService implements ConfigInterface {
   public getPort(): number {
     return this.configService.get<number>('APP_PORT');
   }
+
+  public getJwtSecret(): string {
+    return this.configService.get<string>('JWT_SECRET');
+  }
+
+  public getJwtTokenRefreshTime(): string {
+    return this.configService.get<string>('JWT_TOKEN_REFRESH_TIME');
+  }
+
+  public getJwtTokenTime(): string {
+    return this.configService.get<string>('JWT_TOKEN_TIME');
+  }
+
+  public getJwtAlgorithm(): string {
+    return this.configService.get<string>('JWT_ALRORITHM');
+  }
 }

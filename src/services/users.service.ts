@@ -30,4 +30,13 @@ export class UsersService {
   public async findUserByEmail(email: string): Promise<Users | null> {
     return await this.usersRepository.findOneBy({ email: email });
   }
+
+  /**
+   * Update user record
+   * @param user
+   * @return Promise<Users>
+   */
+  public async updateUser(user: Users): Promise<Users> {
+    return await this.usersRepository.save(user);
+  }
 }

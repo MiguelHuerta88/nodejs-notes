@@ -12,12 +12,17 @@ import { UsersService } from '../services/users.service';
 import { BcryptService } from '../services/bcrypt/bcrypt.service';
 import { UserLoginDto } from './dtos/user.login.dto';
 import { JwtModel } from '../models/utils/jwt';
+import { JwtService } from '@nestjs/jwt';
+import { EnvConfigService } from '../services/config/env-config.service';
+import { UserLogoutDto } from './dtos/user.logout.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly userService: UsersService,
     private readonly bcryptService: BcryptService,
+    private readonly jwtService: JwtService,
+    private readonly envConfigService: EnvConfigService,
   ) {}
 
   @Post('register')
@@ -45,9 +50,40 @@ export class AuthController {
     return user;
   }
 
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  public async logout(@Body() jwtDto: UserLogoutDto): Promise<void> {
+    // verify
+    try {
+      const payload = await this.jwtService.verifyAsync(jwtDto.jwtToken, {
+        secret: this.envConfigService.getJwtSecret(),
+      });
+
+      // search for the user and clear the tokens on logout
+      const user = await this.userService.findUserByEmail(payload.email);
+
+      if (!user)
+        throw new HttpException(
+          'No User Record',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+
+      // update user removing tokens
+      user.token = null;
+      user.refreshToken = null;
+      await this.userService.updateUser(user);
+    } catch (err) {
+      // error verifying return error
+      throw new HttpException(
+        'Verification failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  public async login(@Body() loginDto: UserLoginDto): Promise<void> {
+  public async login(@Body() loginDto: UserLoginDto): Promise<JwtModel> {
     // pull user
     const user = await this.userService.findUserByEmail(loginDto.email);
 
@@ -62,7 +98,24 @@ export class AuthController {
       );
 
     // generate tokens
-    // setup model
-    // return
+    const payload = { sub: user.id, username: user.email };
+
+    const token = await this.jwtService.signAsync(payload, {
+      expiresIn: this.envConfigService.getJwtTokenTime(),
+      secret: this.envConfigService.getJwtSecret(),
+    });
+
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      expiresIn: this.envConfigService.getJwtTokenTime(),
+      secret: this.envConfigService.getJwtTokenRefreshTime(),
+    });
+
+    // set them on user and save
+    user.refreshToken = refreshToken;
+    user.token = token;
+
+    await this.userService.updateUser(user);
+
+    return new JwtModel(token, refreshToken);
   }
 }

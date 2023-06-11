@@ -9,12 +9,17 @@ import { NotesService } from './notes.service';
 import { Users } from '../models/entities/users.entity';
 import { UsersService } from './users.service';
 import { BcryptService } from './bcrypt/bcrypt.service';
+import { BcryptModule } from './bcrypt/bcrypt.module';
+import { JwtNoteModule } from './jwt/jwt.module';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
     NotesConfigModule,
     TypeormModule,
     TypeOrmModule.forFeature([Notes, Users]),
+    BcryptModule,
+    JwtNoteModule,
   ],
   exports: [
     EnvConfigService,
@@ -22,6 +27,7 @@ import { BcryptService } from './bcrypt/bcrypt.service';
     NotesService,
     UsersService,
     BcryptService,
+    JwtService,
   ],
   providers: [
     EnvConfigService,
@@ -29,6 +35,7 @@ import { BcryptService } from './bcrypt/bcrypt.service';
     NotesService,
     UsersService,
     BcryptService,
+    JwtService,
   ],
 })
 export class ServicesModule {}
