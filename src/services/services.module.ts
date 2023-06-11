@@ -12,6 +12,7 @@ import { BcryptService } from './bcrypt/bcrypt.service';
 import { BcryptModule } from './bcrypt/bcrypt.module';
 import { JwtNoteModule } from './jwt/jwt.module';
 import { JwtService } from '@nestjs/jwt';
+import { AuthModule } from './auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { JwtService } from '@nestjs/jwt';
     TypeOrmModule.forFeature([Notes, Users]),
     BcryptModule,
     JwtNoteModule,
+    AuthModule,
   ],
   exports: [
     EnvConfigService,

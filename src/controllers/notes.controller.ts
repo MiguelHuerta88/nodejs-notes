@@ -9,14 +9,17 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { Notes } from '../models/entities/notes.entity';
 import { NoteGetDto } from './dtos/note.get.dto';
 import { NotePatchDto } from './dtos/note.patch.dto';
 import { NotePostDto } from './dtos/note.post.dto';
+import { AuthGuard } from '../guard/auth.guard';
 
 @Controller('notes')
+@UseGuards(AuthGuard)
 export class NotesController {
   constructor(private readonly noteService: NotesService) {}
 
