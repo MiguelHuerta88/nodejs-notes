@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Notes } from '../models/entities/notes.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { EnvConfigService } from './config/env-config.service';
 import { NotePatchDto } from '../controllers/dtos/note.patch.dto';
-import { uptime } from 'os';
 import { NotePostDto } from '../controllers/dtos/note.post.dto';
 
 @Injectable()
