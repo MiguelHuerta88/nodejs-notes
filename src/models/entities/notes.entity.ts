@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Users } from './users.entity';
 
 @Entity('notes')
 export class Notes {
@@ -18,11 +20,16 @@ export class Notes {
   @Column({ name: 'notes', type: 'text', nullable: false })
   notes: string;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({
+    name: 'created_at',
+  })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({
+    name: 'updated_at',
+  })
   updatedAt: Date;
 
-  //userId:
+  @Column({ type: 'int', name: 'user_id', nullable: false, default: null })
+  userId: number;
 }
