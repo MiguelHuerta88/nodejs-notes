@@ -28,6 +28,11 @@
 
 ## Installation
 
+### Copy env file before starting
+```bash
+$ cp ./env/dev.env .env
+```
+
 ```bash
 $ npm install
 ```
@@ -44,6 +49,8 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+## Currently the app is not Dockerized so you have to install mysql client using Brew or manually to get mysql client started and useable
 
 ## Test
 
