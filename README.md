@@ -37,6 +37,22 @@ $ cp ./env/dev.env .env
 $ npm install
 ```
 
+## Starting Docker Containers
+```bash
+$ docker-compose up --build
+```
+__If Docker containers dont spin up__
+* kill command and re-run 
+* ```docker-compose up --build ```
+
+__If docker console is giving bcrypt error run the following__
+* run 
+  * ```docker exec -it noteservice sh```
+* once inside the container run 
+  * ```rm -rf node_modules```
+* then 
+  * ```npm install ```
+
 ## Running the app
 
 ```bash
