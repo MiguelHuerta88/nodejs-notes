@@ -11,11 +11,11 @@ import { NotesConfigModule } from '../../services/config/config.module';
       useFactory: (configService: EnvConfigService) => ({
         // connecting to mysql local. using mysql brew install. We will move to docker after working
         type: 'mysql',
-        host: 'localhost',
+        host: configService.getDatabaseHost(),
         port: 3306,
-        username: 'root',
-        password: 'password',
-        database: 'notes',
+        username: configService.getDatabaseUser(),
+        password: configService.getDatabasePassword(),
+        database: configService.getDatabaseName(),
         entities: [configService.getSrcPath() + '/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
