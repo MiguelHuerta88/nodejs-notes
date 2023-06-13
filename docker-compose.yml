@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  db:
+    image: mysql
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+    networks:
+      - notesnet
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    expose:
+      - ${DATABASE_PORT}
+  notes:
+    container_name: noteservice
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=developement
+    build:
+      context: .
+      args:
+        - ENVIRONMENT=dev
+    expose:
+      - ${APP_PORT}
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    env_file:
+      - .env
+    links:
+      - db
+    volumes:
+      - ./:/var/www/notes/
+      - notused:/var/www/notes/node_modules
+    command: npm run start:dev && bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; npm start'
+    networks:
+      - notesnet
+volumes:
+  notused:
+networks:
+  notesnet:
+    name: notesnet
+    driver: bridge
