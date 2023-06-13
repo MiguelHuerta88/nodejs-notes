@@ -20,7 +20,7 @@ import { NotePostDto } from './dtos/note.post.dto';
 import { AuthGuard } from '../guard/auth.guard';
 import { NoteModel } from '../models/domain/note';
 
-@Controller('notes')
+@Controller('api/notes')
 @UseGuards(AuthGuard)
 export class NotesController {
   constructor(private readonly noteService: NotesService) {}

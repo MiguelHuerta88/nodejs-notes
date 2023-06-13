@@ -9,7 +9,6 @@ RUN apk update && apk add bash
 
 FROM base AS dependencies
 COPY --chown=node:node ./package*.json ./
-RUN rm -rf /var/www/notes/node_modules/
 RUN npm ci
 COPY --chown=node:node . .
 

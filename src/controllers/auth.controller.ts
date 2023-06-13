@@ -16,7 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import { EnvConfigService } from '../services/config/env-config.service';
 import { UserLogoutDto } from './dtos/user.logout.dto';
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(
     private readonly userService: UsersService,

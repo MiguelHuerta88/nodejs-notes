@@ -37,7 +37,7 @@ services:
     volumes:
       - ./:/var/www/notes/
       - notused:/var/www/notes/node_modules
-    command: npm run start:dev && bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; npm start'
+    command: npm run start:dev
     networks:
       - notesnet
 volumes:
